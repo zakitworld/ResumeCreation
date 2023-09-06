@@ -1,0 +1,155 @@
+﻿@model ResumeCreation.Models.Applicant
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+@*<h1>Create</h1>
+
+<h4>Applicant</h4>
+<hr />*@
+
+
+<div class="col-11 mx-auto pt-0 p-0">
+    <div class="card">
+        <div class="card-header bg-success text-uppercase text-white" style="height:45px;">
+            <h4>Create Applicant</h4>
+        </div>
+        <form ID="ApplicantForm" enctype="multipart/form-data" asp-action="Create">
+
+            <div class="container-fluid btn-group">
+                <div class="col-8">
+            <div class="row">
+                <div class="col-md-6">
+                  <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                  <div class="form-group">
+                       <label asp-for="Name" class="control-label"></label>
+                       <input asp-for="Name" class="form-control" />
+                       <span asp-validation-for="Name" class="text-danger"></span>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                      <label asp-for="Gender" class="control-label"></label>
+                      <select asp-for="Gender" class="form-control" asp-items="ViewBag.Gender"></select>
+                      <span asp-validation-for="Gender" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                     <div class="form-group">
+                       <label asp-for="Age" class="control-label"></label>
+                       <input asp-for="Age" class="form-control" />
+                       <span asp-validation-for="Age" class="text-danger"></span>
+                     </div>
+                </div>
+                <div class="col-md-6">
+                     <div class="form-group">
+                       <label asp-for="Qualification" class="control-label"></label>
+                       <input asp-for="Qualification" class="form-control" />
+                       <span asp-validation-for="Qualification" class="text-danger"></span>
+                     </div>
+                </div>
+                <div class="col-md-6">
+                     <div class="form-group">
+                       <label asp-for="TotalExperience" class="control-label"></label>
+                       <input asp-for="TotalExperience" class="form-control-plaintext" readonly />
+                     </div>
+                </div>
+                <div class="col-md-6 btn-group">
+                     <div class="form-group col-8 p-0">
+                       <label asp-for="ProfilePhoto" class="contol-label"></label>
+                       <div class="custom-file">
+                            <input asp-for="ProfilePhoto" class="custom-file-input" id="customFile"
+                                   onchange="document.getElementById('PreviewPhoto').src = window.URL.createObjectURL(this.files[0])" />
+                            <label class="custom-file-label" for="customFile">Choose file</label>
+                       </div>
+                        <span asp-validation-for="ProfilePhoto" class="text-danger"></span>
+                     </div>
+                     </div>
+                    </div>
+                </div>
+
+                     <div class="col-4">
+                         <div class="form-group col-12 justify-content-center align-middle">
+                          <img id="PreviewPhoto" src="~/images/noimage.jpg" alt="Logo Image"
+                               width="200" height="200" style="border:1px; margin-top:20px;"/>
+                         </div>
+                     </div>
+                </div>
+           
+                <div class="container col-12">
+
+           <div class="col-md-12 p-0 m-0 bg-light">
+               <table id="ExpTable" class="table table-sm CodesTable">
+                    <thead>
+                        <tr>
+                           <th>
+                             CompanyName
+                           </th>
+                           <th>
+                             Designation
+                           </th>
+                           <th>
+                             YearsWorked
+                           </th>
+
+                           <th style="width:75px;">
+                                    <button id='btnaddExperience' type="button" class="btn btn-sm btn-secondary visible"
+                                onclick="AddItem(this)">Add</button>
+                           </th>
+
+                        </tr>
+                    </thead>
+
+                <tbody>
+                    @*@foreach (var item in Model.Experiences)*@
+                    @for (int i = 0; i < Model.Experiences.Count; i++)
+                    {
+                        <tr>
+                            <td>
+                               <input asp-for="@Model.Experiences[i].CompanyName" class="form-control"/>
+                              @* @Html.EditorFor(x => x.Experiences[i].CompanyName, new {htmlAttributes = new {@class = "form-control"}}) *@
+                            </td>
+                            <td>
+                                <input asp-for="@Model.Experiences[i].Designation" class="form-control"/>
+                               @* @Html.EditorFor(x => x.Experiences[i].Designation, new {htmlAttributes = new {@class = "form-control"}}) *@
+                            </td>
+                            <td>
+                                <input type="hidden" asp-for="@Model.Experiences[i].IsDeleted" /> 
+                                <input asp-for="@Model.Experiences[i].YearsWorked" class="form-control YearsWorked"/>
+                                @*@Html.EditorFor(x => x.Experiences[i].YearsWorked, new {htmlAttributes = new {@class = "form-control"}})*@
+                                <span asp-validation-for="@Model.Experiences[i].YearsWorked" class="text-danger"></span>
+                            </td>
+
+                            <td style="width:60px;">
+                   
+                                <button id='btnremove-@i' type="button" class="btn btn-sm btn-danger visible"
+                                onclick="DeleteItem(this)">Delete</button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            </div>
+
+            <input type="hidden" id="hdnLastIndex" value="0" />
+
+            <div class="col-12 btn-group">
+                <div class="col-6 form-group text-right p-2">
+                    <a asp-action="Index" class="btn btn-secondary">&nbsp;Back&nbsp;</a>
+                </div>
+                <div class="col-6 form-group text-left p-2">
+                    <input type="submit" value="Create" class="btn btn-primary"/>
+                </div>
+            </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
